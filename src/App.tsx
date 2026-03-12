@@ -126,7 +126,7 @@ function Header({ view, setView }: { view: View; setView: (v: View) => void }) {
           <div className="flex size-6 items-center justify-center rounded-md bg-foreground text-background text-[10px] font-bold tracking-tight">
             dx
           </div>
-          <span className="text-sm font-semibold tracking-tight">dox</span>
+          <span className="text-sm font-semibold tracking-tight">DoX</span>
         </button>
         <div className="flex items-center gap-1">
           <Button
@@ -237,7 +237,7 @@ function Hero({ onStart }: { onStart: () => void }) {
             <Button
               variant="outline"
               size="lg"
-              onClick={() => window.open("https://github.com/DvoiD", "_blank")}
+              onClick={() => window.open("https://github.com/silentmot/dox", "_blank")}
             >
               View Source
             </Button>
