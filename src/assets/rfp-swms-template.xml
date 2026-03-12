@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ============================================================================
+  RFP-SWMS DOCUMENT TEMPLATE
+  ============================================================================
+  Source:  RFP-SWMS-04.docx (C:\Users\DvoiD\BRS\Requested By Operation\)
+  Theme:   "Gallery" base, "Blue Green" color scheme, "Tw Cen MT" font scheme
+  Purpose: Reusable design system for EcoSol RFP/BRS documents
+  ============================================================================
+
+  USAGE:
+    This template defines every inheritable design token from the source doc.
+    When generating a docx via docx-js or XML editing, reference these values
+    as the single source of truth for page layout, styles, colors, fonts,
+    table formatting, headers, footers, and numbering.
+
+  FILE STRUCTURE WHEN UNPACKED:
+    word/document.xml     - Body content (uses styles/numbering refs below)
+    word/styles.xml       - Paragraph + table + character styles
+    word/numbering.xml    - Bullet and decimal list definitions
+    word/header1.xml      - Header with logo + doc-title text box + watermark
+    word/footer1.xml      - Footer with accent-bordered page number
+    word/theme/theme1.xml - Color scheme + font scheme + format scheme
+    word/media/image1.png - Watermark image (EcoSol logo, 5% alpha)
+    word/media/image2.png - Header logo (top-right, full opacity)
+  ============================================================================
+-->
+<Template xmlns:rfp="urn:ecosol:rfp-template:v1">
+
+  <!-- =======================================================================
+       1. PAGE LAYOUT
+       Source: document.xml sectPr (last element in w:body)
+       ======================================================================= -->
+  <PageLayout>
+    <!-- US Letter -->
+    <PageSize width="12240" height="15840" unit="DXA"/>
+    <PageMargins top="1440" right="1440" bottom="1440" left="1440" header="0" footer="720" gutter="0" unit="DXA"/>
+    <PageNumbering start="1"/>
+    <Columns space="720"/>
+    <!--
+      Derived content width: 12240 - 1440 - 1440 = 9360 DXA
+      Derived content height: 15840 - 1440 - 1440 = 12960 DXA
+    -->
+  </PageLayout>
+
+  <!-- =======================================================================
+       2. THEME: COLOR SCHEME
+       Source: word/theme/theme1.xml -> a:clrScheme name="Blue Green" ======================================================================= -->
+  <ColorScheme name="Blue Green">
+    <Color role="dk1" value="000000" systemColor="windowText"/>
+    <Color role="lt1" value="FFFFFF" systemColor="window"/>
+    <Color role="dk2" value="373545"/>
+    <Color role="lt2" value="CEDBE6"/>
+    <Color role="accent1" value="3494BA"/>
+    <Color role="accent2" value="58B6C0"/>
+    <Color role="accent3" value="75BDA7"/>
+    <Color role="accent4" value="7A8C8E"/>
+    <Color role="accent5" value="84ACB6"/>
+    <Color role="accent6" value="2683C6"/>
+    <Color role="hlink" value="6B9F25"/>
+    <Color role="folHlink" value="9F6715"/>
+    <!--
+      Derived shade values used in footer/headings:
+        accent1 shade BF = #276E8B
+        text1 tint BF    = #404040
+        text1 tint A6    = #595959
+        text1 tint D9    = #262626
+        text1 tint 80    = #7F7F7F
+        background1 shade F2 = #F2F2F2
+    -->
+  </ColorScheme>
+
+  <!-- =======================================================================
+       3. THEME: FONT SCHEME
+       Source: word/theme/theme1.xml -> a:fontScheme name="Tw Cen MT" ======================================================================= -->
+  <FontScheme name="Tw Cen MT">
+    <MajorFont latin="Tw Cen MT" panose="020B0602020104020603" arabicFallback="Arial" greekFallback="Calibri" cyrillicFallback="Calibri"/>
+    <MinorFont latin="Tw Cen MT" panose="020B0602020104020603" arabicFallback="Arial" greekFallback="Calibri" cyrillicFallback="Calibri"/>
+    <!--
+      majorHAnsi resolves to "Tw Cen MT" (headings, title, subtitle, footer)
+      minorHAnsi resolves to "Tw Cen MT" (body/normal text)
+    -->
+  </FontScheme>
+
+  <!-- =======================================================================
+       4. DOCUMENT DEFAULTS
+       Source: word/styles.xml -> w:docDefaults
+       ======================================================================= -->
+  <DocumentDefaults>
+    <RunDefaults>
+      <Font ascii="minorHAnsi" eastAsia="minorEastAsia" hAnsi="minorHAnsi" cs="minorBidi"/>
+      <Size val="22" unit="halfPoint"/>
+      <!-- 11pt -->
+      <Language val="en-US" eastAsia="en-US" bidi="ar-SA"/>
+    </RunDefaults>
+    <ParagraphDefaults>
+      <Spacing after="160" line="259" lineRule="auto" unit="DXA/256ths"/>
+    </ParagraphDefaults>
+  </DocumentDefaults>
+
+  <!-- =======================================================================
+       5. PARAGRAPH STYLES
+       Source: word/styles.xml -> w:style elements
+       ======================================================================= -->
+  <ParagraphStyles>
+
+    <!-- Normal: baseline for all paragraph styles -->
+    <Style id="Normal" name="Normal" type="paragraph" default="true">
+      <!-- Inherits all docDefaults; no overrides -->
+    </Style>
+
+    <!--
+      Title: 36pt CAPS, majorHAnsi, color #404040, letter-spacing -10
+      Used for document title inside first table row (gridSpan=5, centered)
+    -->
+    <Style id="Title" name="Title" type="paragraph" basedOn="Normal" next="Normal" uiPriority="10">
+      <ParagraphProperties>
+        <Spacing after="0" line="240" lineRule="auto"/>
+        <ContextualSpacing enabled="true"/>
+      </ParagraphProperties>
+      <RunProperties>
+        <Font theme="majorHAnsi"/>
+        <Caps enabled="true"/>
+        <Color value="404040" themeColor="text1" themeTint="BF"/>
+        <Spacing value="-10"/>
+        <Size val="72" unit="halfPoint"/>
+        <!-- 36pt -->
+      </RunProperties>
+    </Style>
+
+    <!--
+      Subtitle: 14pt smallCaps, majorHAnsi, color #595959
+    -->
+    <Style id="Subtitle" name="Subtitle" type="paragraph" basedOn="Normal" next="Normal" uiPriority="11">
+      <ParagraphProperties>
+        <NumberingLevel ilvl="1"/>
+      </ParagraphProperties>
+      <RunProperties>
+        <Font theme="majorHAnsi"/>
+        <SmallCaps enabled="true"/>
+        <Color value="595959" themeColor="text1" themeTint="A6"/>
+        <Size val="28" unit="halfPoint"/>
+        <!-- 14pt -->
+      </RunProperties>
+    </Style>
+
+    <!--
+      Heading 1: 18pt CAPS, majorHAnsi, keepNext, keepLines, outlineLevel=0
+    -->
+    <Style id="Heading1" name="heading 1" type="paragraph" basedOn="Normal" next="Normal" uiPriority="9">
+      <ParagraphProperties>
+        <KeepNext enabled="true"/>
+        <KeepLines enabled="true"/>
+        <Spacing before="400" after="40" line="240" lineRule="auto"/>
+        <OutlineLevel val="0"/>
+      </ParagraphProperties>
+      <RunProperties>
+        <Font theme="majorHAnsi"/>
+        <Caps enabled="true"/>
+        <Size val="36" unit="halfPoint"/>
+        <!-- 18pt -->
+      </RunProperties>
+    </Style>
+
+    <!--
+      Heading 2: 14pt CAPS, majorHAnsi, outlineLevel=1
+    -->
+    <Style id="Heading2" name="heading 2" type="paragraph" basedOn="Normal" next="Normal" uiPriority="9">
+      <ParagraphProperties>
+        <KeepNext enabled="true"/>
+        <KeepLines enabled="true"/>
+        <Spacing before="120" after="0" line="240" lineRule="auto"/>
+        <OutlineLevel val="1"/>
+      </ParagraphProperties>
+      <RunProperties>
+        <Font theme="majorHAnsi"/>
+        <Caps enabled="true"/>
+        <Size val="28" unit="halfPoint"/>
+        <!-- 14pt -->
+      </RunProperties>
+    </Style>
+
+    <!--
+      Heading 3: 14pt smallCaps, majorHAnsi, outlineLevel=2
+    -->
+    <Style id="Heading3" name="heading 3" type="paragraph" basedOn="Normal" next="Normal" uiPriority="9">
+      <ParagraphProperties>
+        <KeepNext enabled="true"/>
+        <KeepLines enabled="true"/>
+        <Spacing before="120" after="0" line="240" lineRule="auto"/>
+        <OutlineLevel val="2"/>
+      </ParagraphProperties>
+      <RunProperties>
+        <Font theme="majorHAnsi"/>
+        <SmallCaps enabled="true"/>
+        <Size val="28" unit="halfPoint"/>
+        <!-- 14pt -->
+      </RunProperties>
+    </Style>
+
+    <!--
+      Heading 4: 11pt CAPS, majorHAnsi, outlineLevel=3
+    -->
+    <Style id="Heading4" name="heading 4" type="paragraph" basedOn="Normal" next="Normal" uiPriority="9">
+      <ParagraphProperties>
+        <KeepNext enabled="true"/>
+        <KeepLines enabled="true"/>
+        <Spacing before="120" after="0"/>
+        <OutlineLevel val="3"/>
+      </ParagraphProperties>
+      <RunProperties>
+        <Font theme="majorHAnsi"/>
+        <Caps enabled="true"/>
+        <!-- Size inherited from docDefaults: 22 halfPoints = 11pt -->
+      </RunProperties>
+    </Style>
+
+    <!--
+      Heading 5: 11pt italic CAPS, majorHAnsi, outlineLevel=4
+    -->
+    <Style id="Heading5" name="heading 5" type="paragraph" basedOn="Normal" next="Normal" uiPriority="9">
+      <ParagraphProperties>
+        <KeepNext enabled="true"/>
+        <KeepLines enabled="true"/>
+        <Spacing before="120" after="0"/>
+        <OutlineLevel val="4"/>
+      </ParagraphProperties>
+      <RunProperties>
+        <Font theme="majorHAnsi"/>
+        <Italic enabled="true"/>
+        <Caps enabled="true"/>
+      </RunProperties>
+    </Style>
+
+    <!--
+      Heading 6: 10pt bold CAPS, majorHAnsi, color #262626, outlineLevel=5
+    -->
+    <Style id="Heading6" name="heading 6" type="paragraph" basedOn="Normal" next="Normal" uiPriority="9">
+      <ParagraphProperties>
+        <KeepNext enabled="true"/>
+        <KeepLines enabled="true"/>
+        <Spacing before="120" after="0"/>
+        <OutlineLevel val="5"/>
+      </ParagraphProperties>
+      <RunProperties>
+        <Font theme="majorHAnsi"/>
+        <Bold enabled="true"/>
+        <Caps enabled="true"/>
+        <Color value="262626" themeColor="text1" themeTint="D9"/>
+        <Size val="20" unit="halfPoint"/>
+        <!-- 10pt -->
+      </RunProperties>
+    </Style>
+
+    <!--
+      ListParagraph: Normal + left indent 720 DXA + contextual spacing
+    -->
+    <Style id="ListParagraph" name="List Paragraph" type="paragraph" basedOn="Normal" uiPriority="34">
+      <ParagraphProperties>
+        <Indent left="720"/>
+        <ContextualSpacing enabled="true"/>
+      </ParagraphProperties>
+    </Style>
+
+    <!-- Header style: Normal + tab stops at center (4680) and right (9360) -->
+    <Style id="Header" name="header" type="paragraph" basedOn="Normal" uiPriority="99">
+      <ParagraphProperties>
+        <TabStops>
+          <Tab val="center" pos="4680"/>
+          <Tab val="right" pos="9360"/>
+        </TabStops>
+      </ParagraphProperties>
+    </Style>
+
+    <!-- Footer style: Normal + tab stops at center (4680) and right (9360) -->
+    <Style id="Footer" name="footer" type="paragraph" basedOn="Normal" uiPriority="99">
+      <ParagraphProperties>
+        <TabStops>
+          <Tab val="center" pos="4680"/>
+          <Tab val="right" pos="9360"/>
+        </TabStops>
+      </ParagraphProperties>
+    </Style>
+
+  </ParagraphStyles>
+
+  <!-- =======================================================================
+       6. TABLE STYLES
+       Source: word/styles.xml -> w:style type="table" ======================================================================= -->
+  <TableStyles>
+
+    <!--
+      TableNormal: base for all table styles
+      Cell margins: top=0, left=108, bottom=0, right=108 DXA
+    -->
+    <Style id="TableNormal" name="Normal Table" type="table" default="true">
+      <TableProperties>
+        <Indent width="0" type="dxa"/>
+        <CellMargins top="0" left="108" bottom="0" right="108" unit="DXA"/>
+      </TableProperties>
+    </Style>
+
+    <!--
+      TableNormal0: custom base used by inline table styles (a, a0, a1, a2)
+      Cell margins: 100 DXA on all sides (larger padding)
+    -->
+    <Style id="TableNormal0" name="TableNormal" type="table" custom="true">
+      <TableProperties>
+        <CellMargins top="100" left="100" bottom="100" right="100" unit="DXA"/>
+      </TableProperties>
+    </Style>
+
+    <!--
+      PlainTable3: used for the metadata/title table at document top
+      Built-in Word style with firstRow, firstCol, band1Horz formatting
+      Source: styles.xml lines 1203-1353
+    -->
+    <Style id="PlainTable3" name="Plain Table 3" type="table" basedOn="TableNormal" uiPriority="43">
+      <TableProperties>
+        <RowBandSize val="1"/>
+        <ColBandSize val="1"/>
+      </TableProperties>
+      <ConditionalFormats>
+        <FirstRow>
+          <RunProperties>
+            <Bold enabled="true"/>
+            <Caps enabled="true"/>
+          </RunProperties>
+          <CellProperties>
+            <Borders>
+              <Bottom style="single" size="4" space="0" color="7F7F7F" themeColor="text1" themeTint="80"/>
+            </Borders>
+          </CellProperties>
+        </FirstRow>
+        <LastRow>
+          <RunProperties>
+            <Bold enabled="true"/>
+            <Caps enabled="true"/>
+          </RunProperties>
+          <CellProperties>
+            <Borders>
+              <Top style="nil"/>
+            </Borders>
+          </CellProperties>
+        </LastRow>
+        <FirstCol>
+          <RunProperties>
+            <Bold enabled="true"/>
+            <Caps enabled="true"/>
+          </RunProperties>
+          <CellProperties>
+            <Borders>
+              <Right style="single" size="4" space="0" color="7F7F7F" themeColor="text1" themeTint="80"/>
+            </Borders>
+          </CellProperties>
+        </FirstCol>
+        <Band1Horz>
+          <CellProperties>
+            <Shading val="clear" color="auto" fill="F2F2F2" themeFill="background1" themeFillShade="F2"/>
+          </CellProperties>
+        </Band1Horz>
+        <Band1Vert>
+          <CellProperties>
+            <Shading val="clear" color="auto" fill="F2F2F2" themeFill="background1" themeFillShade="F2"/>
+          </CellProperties>
+        </Band1Vert>
+      </ConditionalFormats>
+    </Style>
+
+    <!--
+      EcoSolDataTable: two-line minimal table style for data tables
+      Source: User-confirmed XML table template (March 2026)
+
+      Borders:
+        - Header row: bottom border only (horizontal separator under header)
+        - Data rows: right border on first column only (vertical divider)
+        - No outer borders, no other inner borders
+
+      Shading:
+        - First column: never shaded (always white)
+        - Columns 2+: banded horizontal (odd data rows #F2F2F2, even white)
+
+      Layout:
+        - Header: bold, center-aligned, repeats on page break
+        - Cell padding: 100 DXA (~0.07") all sides
+        - Cell text: 10pt (20 half-points)
+    -->
+    <Style id="EcoSolDataTable" name="EcoSol Data Table" type="table" custom="true">
+      <TableProperties>
+        <TableBorders>
+          <Top style="nil"/>
+          <Left style="nil"/>
+          <Bottom style="nil"/>
+          <Right style="nil"/>
+          <InsideH style="nil"/>
+          <InsideV style="nil"/>
+        </TableBorders>
+        <CellMargins top="100" left="100" bottom="100" right="100" unit="DXA"/>
+      </TableProperties>
+      <ConditionalFormats>
+        <HeaderRow>
+          <RunProperties>
+            <Bold enabled="true"/>
+            <Size val="20" unit="halfPoint"/><!-- 10pt -->
+          </RunProperties>
+          <ParagraphProperties>
+            <Alignment horizontal="center"/>
+          </ParagraphProperties>
+          <CellProperties>
+            <Borders>
+              <Bottom style="single" size="6" space="0" color="7F7F7F"/>
+            </Borders>
+            <VerticalAlignment val="center"/>
+          </CellProperties>
+          <RowProperties>
+            <RepeatOnPageBreak enabled="true"/>
+            <MinHeight val="360" unit="DXA"/>
+          </RowProperties>
+        </HeaderRow>
+        <FirstCol scope="dataRowsOnly">
+          <CellProperties>
+            <Borders>
+              <Right style="single" size="4" space="0" color="7F7F7F"/>
+            </Borders>
+            <Shading val="none"/><!-- First column never shaded -->
+          </CellProperties>
+        </FirstCol>
+        <Band1Horz scope="columns2PlusOnly">
+          <CellProperties>
+            <Shading val="clear" color="auto" fill="F2F2F2"/>
+          </CellProperties>
+        </Band1Horz>
+      </ConditionalFormats>
+      <DataRowDefaults>
+        <RunProperties>
+          <Size val="20" unit="halfPoint"/><!-- 10pt -->
+        </RunProperties>
+        <CellProperties>
+          <VerticalAlignment val="center"/>
+          <MinHeight val="320" unit="DXA"/>
+        </CellProperties>
+      </DataRowDefaults>
+    </Style>
+
+    <!--
+      Custom table styles (a, a0, a1, a2): Google Docs-origin inline tables
+      All share identical structure: basedOn TableNormal0, firstRow uses
+      Inter Medium font at 11pt, color #1F1F1F, fill #F2F2EF, no top border,
+      vertical center alignment.
+      Use when replicating the document's data-entry table patterns.
+    -->
+    <Style id="CustomInlineTable" name="EcoSol Inline Table" type="table" basedOn="TableNormal0" custom="true" note="Replaces styles a/a0/a1/a2 from source; all are identical">
+      <TableProperties>
+        <RowBandSize val="1"/>
+        <ColBandSize val="1"/>
+      </TableProperties>
+      <ConditionalFormats>
+        <FirstRow>
+          <RunProperties>
+            <Font ascii="Inter Medium" eastAsia="Inter Medium" hAnsi="Inter Medium" cs="Inter Medium"/>
+            <Color value="1F1F1F"/>
+            <Size val="22" unit="halfPoint"/>
+            <!-- 11pt -->
+          </RunProperties>
+          <CellProperties>
+            <Borders>
+              <Top style="nil"/>
+            </Borders>
+            <Shading val="clear" color="auto" fill="F2F2EF"/>
+            <VerticalAlignment val="center"/>
+          </CellProperties>
+        </FirstRow>
+      </ConditionalFormats>
+    </Style>
+
+  </TableStyles>
+
+  <!-- =======================================================================
+       7. TABLE USAGE PATTERNS (from document.xml)
+       ======================================================================= -->
+  <TablePatterns>
+
+    <!--
+      Pattern A: Metadata/Title Table (PlainTable3)
+      Used at document top for RFP title + metadata fields
+      5 columns, first row spans all 5 (gridSpan=5) for centered title
+    -->
+    <Pattern name="MetadataTitleTable" style="PlainTable3">
+      <TableWidth type="auto"/>
+      <GridColumns>
+        <Column width="1679"/>
+        <Column width="2597"/>
+        <Column width="1668"/>
+        <Column width="1256"/>
+        <Column width="2160"/>
+      </GridColumns>
+      <TableLook firstRow="1" lastRow="0" firstColumn="1" lastColumn="0" noHBand="0" noVBand="1" lookValue="04A0"/>
+      <Notes>
+        Row 1: Title style, centered, gridSpan=5, no bold override (b val=0), CAPS, 18pt, auto color.
+        Row 2+: Metadata key-value pairs. First column is label (bold via firstCol conditional).
+        Row heights: 357 DXA for header, 276 DXA for data rows.
+      </Notes>
+    </Pattern>
+
+    <!--
+      Pattern B: Data Table (EcoSolDataTable)
+      Two-line minimal style for all data tables in BRS/RFP documents.
+      Columns auto-distributed across 9360 DXA content width.
+    -->
+    <Pattern name="DataTable" style="EcoSolDataTable">
+      <TableWidth size="9360" type="DXA"/><!-- Full content width -->
+      <GridColumns distribution="equal"/><!-- Columns calculated at runtime by mapper -->
+      <Notes>
+        Header row: bold, center-aligned, bottom border #7F7F7F sz=6, repeats on page break.
+        First column: right border #7F7F7F sz=4 (vertical divider), never shaded.
+        Columns 2+: banded horizontal (odd data rows #F2F2F2, even white).
+        Cell padding: 100 DXA all sides. Cell text: 10pt.
+      </Notes>
+    </Pattern>
+
+  </TablePatterns>
+
+  <!-- =======================================================================
+       8. HEADER LAYOUT
+       Source: word/header1.xml
+       Relationships: header1.xml.rels (rId1=image1.png, rId2=image2.png)
+       ======================================================================= -->
+  <HeaderLayout>
+    <!--
+      Element 1: Document title text box
+      Floating text box, positioned left of header area
+    -->
+    <TextBox name="DocTitle">
+      <Position horizontal="-276832" vertical="383847" unit="EMU" relativeFrom="column"/>
+      <Size width="2360930" height="1404620" unit="EMU"/>
+      <Content>
+        <Paragraph alignment="center">
+          <Run size="18" sizeUnit="halfPoint">            <!-- 9pt -->
+            {{DOCUMENT_TITLE}}
+          </Run>
+        </Paragraph>
+      </Content>
+      <SizeRelative>
+        <Width percent="40000" relativeTo="margin"/>
+        <Height percent="20000" relativeTo="margin"/>
+      </SizeRelative>
+    </TextBox>
+
+    <!--
+      Element 2: Watermark image (background, behind text)
+      EcoSol logo at 5% alpha, rotated 18065674 (approx 271.5 deg)
+    -->
+    <Image name="Watermark" relationship="rId1" file="image1.png">
+      <Position horizontal="right" horizontalRelativeTo="page" vertical="3658800" verticalUnit="EMU" verticalRelativeTo="paragraph"/>
+      <Size width="6383559" height="5943600" unit="EMU"/>
+      <BehindText enabled="true"/>
+      <WrapNone/>
+      <AlphaModification amount="5000"/>
+      <!-- 5% opacity -->
+      <Rotation value="18065674"/>
+      <SourceRect top="3571" bottom="3571"/>
+    </Image>
+
+    <!--
+      Element 3: Company logo (foreground, top-right)
+    -->
+    <Image name="Logo" relationship="rId2" file="image2.png">
+      <Position horizontal="4461468" horizontalUnit="EMU" horizontalRelativeTo="margin" vertical="20097" verticalUnit="EMU" verticalRelativeTo="paragraph"/>
+      <Size width="1920240" height="899160" unit="EMU"/>
+      <WrapNone/>
+      <SourceRect left="-8007" top="-41296" right="-8660" bottom="-19298"/>
+    </Image>
+  </HeaderLayout>
+
+  <!-- =======================================================================
+       9. FOOTER LAYOUT
+       Source: word/footer1.xml
+       ======================================================================= -->
+  <FooterLayout>
+    <!--
+      Single paragraph with left accent border, PAGE field
+      Font: majorHAnsi 13pt, color accent1 shade BF (#276E8B)
+      Border: left, single, 12 eighths-of-a-point, 11pt space, accent1 (#3494BA)
+    -->
+    <Paragraph>
+      <Border side="left" style="single" size="12" space="11" color="3494BA" themeColor="accent1"/>
+      <TabStops>
+        <Tab val="left" pos="622"/>
+      </TabStops>
+      <RunProperties>
+        <Font theme="majorHAnsi"/>
+        <Color value="276E8B" themeColor="accent1" themeShade="BF"/>
+        <Size val="26" unit="halfPoint"/>
+        <!-- 13pt -->
+      </RunProperties>
+      <Field type="PAGE" format="\* MERGEFORMAT"/>
+    </Paragraph>
+    <!-- Trailing empty paragraph with Footer style -->
+    <Paragraph style="Footer"/>
+  </FooterLayout>
+
+  <!-- =======================================================================
+       10. NUMBERING DEFINITIONS
+       Source: word/numbering.xml (abstractNum 0 and associated numIds)
+       ======================================================================= -->
+  <NumberingDefinitions>
+
+    <!--
+      Multilevel bullet list: used throughout for scope items, requirements
+      Font: Arial 11pt, color #000000
+    -->
+    <AbstractNumbering id="0" type="multilevel">
+      <Level ilvl="0" format="bullet" text="&#x25CF;" justification="left">
+        <!-- Filled circle -->
+        <Indent left="720" hanging="360" unit="DXA"/>
+        <RunProperties>
+          <Font ascii="Arial" eastAsia="Arial" hAnsi="Arial" cs="Arial"/>
+          <Size val="22"/>
+          <Color value="000000"/>
+        </RunProperties>
+      </Level>
+      <Level ilvl="1" format="bullet" text="&#x25CB;" justification="left">
+        <!-- Open circle -->
+        <Indent left="1440" hanging="360" unit="DXA"/>
+        <RunProperties>
+          <Font ascii="Arial" eastAsia="Arial" hAnsi="Arial" cs="Arial"/>
+          <Size val="22"/>
+          <Color value="000000"/>
+        </RunProperties>
+      </Level>
+      <Level ilvl="2" format="bullet" text="&#x25A0;" justification="left">
+        <!-- Filled square -->
+        <Indent left="2160" hanging="360" unit="DXA"/>
+        <RunProperties>
+          <Font ascii="Arial" eastAsia="Arial" hAnsi="Arial" cs="Arial"/>
+          <Size val="22"/>
+          <Color value="000000"/>
+        </RunProperties>
+      </Level>
+      <Level ilvl="3" format="bullet" text="&#x25CF;" justification="left">
+        <Indent left="2880" hanging="360" unit="DXA"/>
+        <RunProperties>
+          <Font ascii="Arial" eastAsia="Arial" hAnsi="Arial" cs="Arial"/>
+          <Size val="22"/>
+          <Color value="000000"/>
+        </RunProperties>
+      </Level>
+      <Level ilvl="4" format="bullet" text="&#x25CB;" justification="left">
+        <Indent left="3600" hanging="360" unit="DXA"/>
+        <RunProperties>
+          <Font ascii="Arial" eastAsia="Arial" hAnsi="Arial" cs="Arial"/>
+          <Size val="22"/>
+          <Color value="000000"/>
+        </RunProperties>
+      </Level>
+    </AbstractNumbering>
+
+  </NumberingDefinitions>
+
+  <!-- =======================================================================
+       11. CONTENT TYPES (required for valid docx packaging)
+       Source: [Content_Types].xml
+       ======================================================================= -->
+  <ContentTypes>
+    <Default extension="rels" contentType="application/vnd.openxmlformats-package.relationships+xml"/>
+    <Default extension="xml" contentType="application/xml"/>
+    <Default extension="png" contentType="image/png"/>
+    <Override partName="/word/document.xml" contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+    <Override partName="/word/styles.xml" contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
+    <Override partName="/word/numbering.xml" contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/>
+    <Override partName="/word/header1.xml" contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/>
+    <Override partName="/word/footer1.xml" contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/>
+    <Override partName="/word/settings.xml" contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>
+    <Override partName="/word/theme/theme1.xml" contentType="application/vnd.openxmlformats-officedocument.theme+xml"/>
+    <Override partName="/word/fontTable.xml" contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/>
+    <Override partName="/word/footnotes.xml" contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml"/>
+    <Override partName="/word/endnotes.xml" contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml"/>
+    <Override partName="/word/glossary/document.xml" contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.glossary+xml"/>
+  </ContentTypes>
+
+  <!-- =======================================================================
+       12. RELATIONSHIPS MAP
+       Source: word/_rels/document.xml.rels, word/_rels/header1.xml.rels
+       ======================================================================= -->
+  <Relationships>
+    <DocumentRelationships>
+      <Relationship id="rId2" type="numbering" target="numbering.xml"/>
+      <Relationship id="rId3" type="styles" target="styles.xml"/>
+      <Relationship id="rId4" type="settings" target="settings.xml"/>
+      <Relationship id="rId5" type="webSettings" target="webSettings.xml"/>
+      <Relationship id="rId6" type="footnotes" target="footnotes.xml"/>
+      <Relationship id="rId7" type="endnotes" target="endnotes.xml"/>
+      <Relationship id="rId8" type="header" target="header1.xml"/>
+      <Relationship id="rId9" type="footer" target="footer1.xml"/>
+      <Relationship id="rId10" type="fontTable" target="fontTable.xml"/>
+      <Relationship id="rId12" type="theme" target="theme/theme1.xml"/>
+    </DocumentRelationships>
+    <HeaderRelationships partName="header1.xml">
+      <Relationship id="rId1" type="image" target="media/image1.png" note="Watermark at 5% alpha"/>
+      <Relationship id="rId2" type="image" target="media/image2.png" note="Company logo"/>
+    </HeaderRelationships>
+  </Relationships>
+
+</Template>
